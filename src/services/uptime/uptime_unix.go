@@ -19,7 +19,17 @@ func GetSystemUptime() models.Uptime {
 	}
 	uptimeDuration := time.Duration(sysinfo.Uptime) * time.Second
 
-	return formatUptime(uptimeDuration)
+	days := int(uptimeDuration.Hours()) / 24
+	hours := int(uptimeDuration.Hours()) % 24
+	minutes := int(uptimeDuration.Minutes()) % 60
+	seconds := int(uptimeDuration.Seconds()) % 60
+
+	return models.Uptime{
+		Days:    days,
+		Hours:   hours,
+		Minutes: minutes,
+		Seconds: seconds,
+	}
 }
 
 func formatUptime(d time.Duration) string {
