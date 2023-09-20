@@ -28,6 +28,9 @@ WORKDIR /app
 # Copy the compiled binary from the build stage
 COPY --from=build /app/StatSniper /app/
 
+# Set the binary to be executable
+RUN chmod +x /app/StatSniper
+
 # Expose the API port
 EXPOSE 80
 
