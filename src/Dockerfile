@@ -32,4 +32,4 @@ COPY --from=build /app/StatSniper /app/
 EXPOSE 80
 
 # Run the binary on container startup
-CMD ["/app/whois-api"]
+CMD ["/app/StatSniper"]
