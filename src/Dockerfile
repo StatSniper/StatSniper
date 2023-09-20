@@ -28,6 +28,10 @@ WORKDIR /app
 # Copy the compiled binary from the build stage
 COPY --from=build /app/StatSniper /app/
 
+# Copy static files and index.html
+COPY static/ /app/static/
+COPY index.html /app/
+
 # Set the binary to be executable
 RUN chmod +x /app/StatSniper
 
