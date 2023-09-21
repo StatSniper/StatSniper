@@ -5,7 +5,7 @@ FROM golang:1.21.1-windowsservercore-ltsc2022 AS build
 WORKDIR C:\\app
 
 # Copy the go.mod and go.sum files into the container
-COPY src\\go.mod go.sum ./
+COPY src\\go.mod src\\go.sum ./
 
 # Download dependencies
 RUN go mod download

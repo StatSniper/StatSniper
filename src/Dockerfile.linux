@@ -5,7 +5,7 @@ FROM golang:1.21-alpine AS build
 WORKDIR /app
 
 # Copy the go.mod and go.sum files into the container to download the necessary Go modules
-COPY src/go.mod go.sum ./
+COPY src/go.mod src/go.sum ./
 
 # Download dependencies: This step fetches all dependencies specified in go.mod and go.sum
 RUN go mod download
