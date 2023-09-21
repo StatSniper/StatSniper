@@ -29,8 +29,8 @@ WORKDIR /app
 COPY --from=build /app/StatSniper /app/
 
 # Copy static files and index.html into appropriate directories in your container
-COPY src/static/ /app/static/
-COPY src/index.html /app/
+COPY static/ /app/static/
+COPY index.html /app/
 
 # Make the StatSniper binary executable
 RUN chmod +x /app/StatSniper
