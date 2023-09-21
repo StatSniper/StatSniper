@@ -11,24 +11,25 @@ jobs:
     runs-on: windows-latest
     
     steps:
+      # 🛎️ Step 1: Checkout the repository to access its files
       - name: 🔍 Checkout Repository
         uses: actions/checkout@v4
 
+      # 🛎️ Step 2: Login to DockerHub to push the Docker image
       - name: 🖥️ Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      # 🛎️ Step 3: Get the Commit SHA from the GitHub SCM
       - name: 🏷️ Fetch Commit SHA
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      # 🛎️ Step 4: Build and push the Windows Docker image to DockerHub
       - name: 🛠️ Build and Push Docker Images
-        uses: docker/build-push-action@v2
-        with:
-          context: ./src
-          file: ./src/Dockerfile.windows
-          push: true
-          tags: |
-            dublok/statsniper:windows-main
-            dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
+        run: |
+          docker build -t dublok/statsniper:windows-main -f ./src/Dockerfile.windows ./src
+          docker push dublok/statsniper:windows-main
+          docker tag dublok/statsniper:windows-main dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
+          docker push dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
