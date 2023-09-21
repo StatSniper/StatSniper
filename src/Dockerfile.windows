@@ -8,8 +8,7 @@ WORKDIR C:\\app
 COPY go.mod go.sum ./
 
 # Download dependencies: This step fetches all dependencies specified in go.mod and go.sum
-# RUN ["C:\\Windows\\System32\\cmd.exe", "/S", "/C", "go mod download"]
-RUN ["C:\\Windows\\System32\\cmd.exe", "/C", "echo Hello, World"]
+RUN go mod download
 
 # Copy the source code into the container
 COPY . .
