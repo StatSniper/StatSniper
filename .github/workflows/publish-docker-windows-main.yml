@@ -27,9 +27,18 @@ jobs:
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       # 🛎️ Step 4: Build and push the Windows Docker image to DockerHub
+      # - name: 🛠️ Build and Push Docker Images
+      #   run: |
+      #     docker build -t dublok/statsniper:windows-main -f ./src/Dockerfile.windows ./src
+      #     docker push dublok/statsniper:windows-main
+      #     docker tag dublok/statsniper:windows-main dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
+      #     docker push dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
+
       - name: 🛠️ Build and Push Docker Images
-        run: |
-          docker build -t dublok/statsniper:windows-main -f ./src/Dockerfile.windows ./src
-          docker push dublok/statsniper:windows-main
-          docker tag dublok/statsniper:windows-main dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
-          docker push dublok/statsniper:windows-main-${{ env.SHA_SHORT }}
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: ./src
+          file: ./src/Dockerfile.windows
+          push: true
+          platforms: windows/amd64
+          tags: dublok/statsniper:linux-main,dublok/statsniper:linux-main-${{ env.SHA_SHORT }}

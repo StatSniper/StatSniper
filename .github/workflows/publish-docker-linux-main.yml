@@ -13,12 +13,6 @@ jobs:
       - name: 🔍 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: List files in src directory
-        run: ls -al ./src
-
-      - name: List files in root directory
-        run: ls -al ./
-
       - name: 🛠️ Setup QEMU
         uses: docker/setup-qemu-action@v3
 
