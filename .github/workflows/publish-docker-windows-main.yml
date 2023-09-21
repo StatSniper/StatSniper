@@ -1,0 +1,41 @@
+name: 🐳 Windows Docker Image [main]
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  # 👷‍♂️ Job to build and push the Windows Docker image
+  build-and-push:
+    runs-on: windows-latest
+    
+    steps:
+      # 🛎️ Step 1: Checkout the repository to access its files
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      # 🛎️ Step 2: Set up Docker Buildx for building the Windows Docker images
+      - name: 🛠️ Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 🛎️ Step 3: Login to DockerHub to push the Docker image
+      - name: 🖥️ Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # 🛎️ Step 4: Get the tag name from the GitHub reference
+      - name: 🏷️ Fetch Tag Name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+      # 🛎️ Step 5: Build and push the Windows Docker image to DockerHub
+      - name: 🛠️ Build and Push Docker Images
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: .
+          file: ./src/Dockerfile.windows
+          push: true
+          platforms: windows/amd64
+          tags: dublok/statsniper:windows-latest,dublok/statsniper:windows-${{ env.TAG }}
