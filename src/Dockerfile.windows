@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o StatSniper.exe main.go
+RUN go build -o StatSniper.exe src\\main.go
 
 # Final stage
 FROM mcr.microsoft.com/windows/servercore:ltsc2022

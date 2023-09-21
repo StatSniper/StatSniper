@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Compile the Go application to a binary named StatSniper
-RUN go build -o StatSniper main.go
+RUN go build -o StatSniper src/main.go
 
 # Final stage: This stage uses a minimal alpine image to run your Go application
 FROM alpine:latest
