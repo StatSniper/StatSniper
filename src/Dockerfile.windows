@@ -26,8 +26,8 @@ WORKDIR C:\\app
 COPY --from=build C:\\app\\StatSniper.exe C:\\app\\
 
 # Copy static files and index.html
-COPY static\\ C:\\app\\static\\
-COPY index.html C:\\app\\
+COPY src\\static\\ C:\\app\\static\\
+COPY src\\index.html C:\\app\\
 
 # Expose the API port
 EXPOSE 80
