@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v5.0.0
         with:
           context: ./src
-          file: Dockerfile.windows
+          file: ./src/Dockerfile.windows
           push: true
           platforms: windows/amd64
           tags: dublok/statsniper:windows-latest,dublok/statsniper:windows-${{ env.TAG }}
