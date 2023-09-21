@@ -38,8 +38,8 @@ jobs:
       - name: 🛠️ Build and Push Docker Images
         uses: docker/build-push-action@v5.0.0
         with:
-          context: .
-          file: ./src/Dockerfile.linux
+          context: ./src
+          file: ./Dockerfile.linux
           push: true
           platforms: linux/amd64,linux/arm64,linux/s390x
           tags: dublok/statsniper:linux-latest,dublok/statsniper:linux-${{ env.TAG }}

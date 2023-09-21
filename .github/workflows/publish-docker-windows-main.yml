@@ -34,8 +34,8 @@ jobs:
       - name: 🛠️ Build and Push Docker Images
         uses: docker/build-push-action@v5.0.0
         with:
-          context: .
-          file: ./src/Dockerfile.windows
+          context: ./src
+          file: ./Dockerfile.windows
           push: true
           platforms: windows/amd64
           tags: dublok/statsniper:windows-latest,dublok/statsniper:windows-${{ env.TAG }}
