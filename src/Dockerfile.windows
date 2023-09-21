@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o StatSniper.exe main.go
 
 # Final stage: This stage uses the Windows Server Core base image to run your Go application
-FROM mcr.microsoft.com/windows/servercore:ltsc2022
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
 
 # Set the working directory to C:\\app inside the container
 WORKDIR C:\\app
