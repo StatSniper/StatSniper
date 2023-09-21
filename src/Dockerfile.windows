@@ -5,7 +5,7 @@ FROM golang:1.21.1-windowsservercore-ltsc2022 AS build
 WORKDIR C:\\app
 
 # Copy the go.mod and go.sum files into the container
-COPY src\\go.mod src\\go.sum ./
+COPY go.mod go.sum ./
 
 # Download dependencies
 RUN go mod download
@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o StatSniper.exe src\\main.go
+RUN go build -o StatSniper.exe main.go
 
 # Final stage
 FROM mcr.microsoft.com/windows/servercore:ltsc2022
@@ -26,8 +26,8 @@ WORKDIR C:\\app
 COPY --from=build C:\\app\\StatSniper.exe C:\\app\\
 
 # Copy static files and index.html
-COPY src\\static\\ C:\\app\\static\\
-COPY src\\index.html C:\\app\\
+COPY static\\ C:\\app\\static\\
+COPY index.html C:\\app\\
 
 # Expose the API port
 EXPOSE 80
