@@ -1,5 +1,5 @@
 # Build stage: This stage uses the golang:1.21.1-windowsservercore-ltsc2022 image to compile your Go application on Windows.
-FROM golang:windowsservercore-ltsc2022 AS build
+FROM golang:windowsservercore-1809 AS build
 
 # Set the working directory to C:\\app inside the container
 WORKDIR C:\\app
