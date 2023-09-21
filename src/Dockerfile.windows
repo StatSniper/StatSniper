@@ -1,8 +1,8 @@
 # Build stage
-FROM golang:1.21-alpine AS build
+FROM golang:1.21.1-windowsservercore-ltsc2022 AS build
 
 # Set the working directory
-WORKDIR /app
+WORKDIR C:\\app
 
 # Copy the go.mod and go.sum files into the container
 COPY go.mod go.sum ./
@@ -14,29 +14,23 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o StatSniper main.go
+RUN go build -o StatSniper.exe main.go
 
 # Final stage
-FROM alpine:latest
-
-# Install ca-certificates to enable SSL connections
-RUN apk --no-cache add ca-certificates
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 # Set the working directory
-WORKDIR /app
+WORKDIR C:\\app
 
 # Copy the compiled binary from the build stage
-COPY --from=build /app/StatSniper /app/
+COPY --from=build C:\\app\\StatSniper.exe C:\\app\\
 
 # Copy static files and index.html
-COPY static/ /app/static/
-COPY index.html /app/
-
-# Set the binary to be executable
-RUN chmod +x /app/StatSniper
+COPY static\\ C:\\app\\static\\
+COPY index.html C:\\app\\
 
 # Expose the API port
 EXPOSE 80
 
 # Run the binary on container startup
-CMD ["/app/StatSniper"]
+CMD ["C:\\app\\StatSniper.exe"]
