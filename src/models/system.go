@@ -2,7 +2,7 @@ package models
 
 type ProcessorInfo struct {
 	Name       string `json:"name"`
-	CoreCount  string `json:"coreCount"`
+	CoreCount  int    `json:"coreCount"`
 	ClockSpeed string `json:"clockSpeed"`
 	BitDepth   string `json:"bitDepth"`
 }
@@ -11,7 +11,8 @@ type MachineInfo struct {
 	OperatingSystem     string `json:"operatingSystem"`
 	TotalRam            uint64 `json:"totalRam"`
 	RamTypeOrOSBitDepth string `json:"ramTypeOrOSBitDepth"`
-	ProcCount           string `json:"procCount"`
+	ProcCount           int    `json:"procCount"`
+	AvailableRam        uint64 `json:"availableRam"`
 }
 
 type StorageInfo struct {

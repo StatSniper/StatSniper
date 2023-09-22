@@ -3,8 +3,8 @@
 window.StatSniper = {
     currentPage: 1,
     html: null, background: null, processorLabelsArray: null, storageLabelsArray: null, processorTriangle: null, ramTriangle: null, storageTriangle: null, chart: null,
-    ramLabelsArray: null, logoPage: null, contactsPage: null, currentClockSpeed: null, currentProcCount: null, currentMemory: null, currentMachineBitDepth: null, currentCPUBitDepth: null, currentDiskSwap: null,
-    currentCpuName: null, currentOsName: null, currentTotalStorage: null, currentDiskCount: null, firstControl: null, secondControl: null, cloudLeft: null, cloudRight: null, days: null, hours: null, minutes: null, seconds: null,
+    ramLabelsArray: null, logoPage: null, contactsPage: null, currentClockSpeed: null, currentMemory: null, currentMachineBitDepth: null, currentCPUBitDepth: null, currentDiskSwap: null,
+    currentCpuName: null, currentOsName: null, currentTotalStorage: null, currentCpuCoreCount: null, availableRam: null, currentDiskCount: null, firstControl: null, secondControl: null, cloudLeft: null, cloudRight: null, days: null, hours: null, minutes: null, seconds: null,
     _xhr: null,
     XHR: function(){
         if (!this._xhr) this._xhr = new XMLHttpRequest();
@@ -24,14 +24,15 @@ window.StatSniper = {
         this.logoPage = document.getElementById("logo-page");
         this.contactsPage = document.getElementById("contacts-page");
         this.currentClockSpeed = document.getElementById("currentClockSpeed");
-        this.currentProcCount = document.getElementById("currentProcCount");
         this.currentMemory = document.getElementById("currentMemory");
         this.currentMachineBitDepth = document.getElementById("currentMachineBitDepth");
         this.currentCPUBitDepth = document.getElementById("currentCPUBitDepth");
         this.currentTotalStorage = document.getElementById("currentTotalStorage");
         this.currentDiskSwap = document.getElementById("currentDiskSwap");
         this.currentDiskCount = document.getElementById("currentDiskCount");
+        this.currentCpuCoreCount = document.getElementById("currentCpuCoreCount");
         this.currentCpuName = document.getElementById("currentCpuName");
+        this.availableRam = document.getElementById("availableRam");
         this.currentOsName = document.getElementById("currentOsName");
         this.firstControl = document.getElementById("first-control");
         this.secondControl = document.getElementById("second-control");
@@ -91,12 +92,13 @@ window.StatSniper = {
     },
     UpdateInfo: function (response) {
         this.currentClockSpeed.innerHTML = response.processor.clockSpeed;
-        this.currentProcCount.innerHTML = response.machine.procCount;
         this.currentMemory.innerHTML = this.FormatBytes(response.machine.totalRam);
         this.currentMachineBitDepth.innerHTML = response.machine.ramTypeOrOSBitDepth;
         this.currentCPUBitDepth.innerHTML = response.processor.bitDepth;
         this.currentTotalStorage.innerHTML = this.FormatBytes(response.storage.total);
+        this.currentCpuCoreCount.innerHTML = response.processor.coreCount + " Cores";
         this.currentDiskSwap.innerHTML = this.FormatBytes(response.storage.swapAmount) + " Swap";
+        this.availableRam.innerHTML = this.FormatBytes(response.machine.availableRam);
         this.currentDiskCount.innerHTML = response.storage.diskCount + " Disk(s)";
         this.currentCpuName.innerHTML = response.processor.name;
         this.currentOsName.innerHTML = response.machine.operatingSystem;

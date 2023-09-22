@@ -44,19 +44,26 @@ func GetSystemInfo() models.SystemInfo {
 	// Count the number of partitions
 	diskCount := len(partitions)
 
+	// Get the total number of logical cores (including virtual cores)
+	totalCores, err := cpu.Counts(true)
+	if err != nil {
+		return models.SystemInfo{}
+	}
+
 	// Create and return SystemInfo object
 	return models.SystemInfo{
 		Processor: models.ProcessorInfo{
 			Name:       cpuInfo[0].ModelName,
-			CoreCount:  fmt.Sprintf("%d Cores", cpuInfo[0].Cores),
+			CoreCount:  totalCores,
 			ClockSpeed: fmt.Sprintf("%.2f GHz", float64(cpuInfo[0].Mhz)/1000),
 			BitDepth:   GetBitDepth(hostInfo.KernelArch),
 		},
 		Machine: models.MachineInfo{
 			OperatingSystem:     hostInfo.Platform,
 			TotalRam:            memInfo.Total,
+			AvailableRam:        memInfo.Available,
 			RamTypeOrOSBitDepth: GetBitDepth(hostInfo.KernelArch),
-			ProcCount:           fmt.Sprintf("%d Procs", cpuInfo[0].Cores),
+			ProcCount:           totalCores,
 		},
 		Storage: models.StorageInfo{
 			MainStorage: diskInfo.Path,
