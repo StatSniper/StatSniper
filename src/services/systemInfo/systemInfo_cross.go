@@ -3,6 +3,7 @@ package systemInfo
 import (
 	"StatSniper/models"
 	"fmt"
+
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
@@ -34,6 +35,15 @@ func GetSystemInfo() models.SystemInfo {
 		return models.SystemInfo{}
 	}
 
+	// Get list of disk partitions
+	partitions, err := disk.Partitions(false)
+	if err != nil {
+		return models.SystemInfo{}
+	}
+
+	// Count the number of partitions
+	diskCount := len(partitions)
+
 	// Create and return SystemInfo object
 	return models.SystemInfo{
 		Processor: models.ProcessorInfo{
@@ -43,16 +53,16 @@ func GetSystemInfo() models.SystemInfo {
 			BitDepth:   GetBitDepth(hostInfo.KernelArch),
 		},
 		Machine: models.MachineInfo{
-			OperatingSystem:     hostInfo.OS,
-			TotalRam:            fmt.Sprintf("%.2f GB", float64(memInfo.Total)/(1024*1024*1024)),
+			OperatingSystem:     hostInfo.Platform,
+			TotalRam:            memInfo.Total,
 			RamTypeOrOSBitDepth: GetBitDepth(hostInfo.KernelArch),
 			ProcCount:           fmt.Sprintf("%d Procs", cpuInfo[0].Cores),
 		},
 		Storage: models.StorageInfo{
 			MainStorage: diskInfo.Path,
-			Total:       fmt.Sprintf("%.2f GB", float64(diskInfo.Total)/(1024*1024*1024)),
-			DiskCount:   "1 Disk", // You will need another method to get the exact number of disks
-			SwapAmount:  fmt.Sprintf("%.2f MB Swap", float64(memInfo.SwapTotal)/(1024*1024)),
+			Total:       diskInfo.Total,
+			DiskCount:   diskCount,
+			SwapAmount:  memInfo.SwapTotal,
 		},
 	}
 }
@@ -65,7 +75,6 @@ func GetBitDepth(arch string) string {
 		return "32-bit"
 	case "arm64", "aarch64":
 		return "64-bit"
-	// Add other architectures as needed
 	default:
 		return "Unknown bit depth"
 	}

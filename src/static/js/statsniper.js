@@ -92,12 +92,12 @@ window.StatSniper = {
     UpdateInfo: function (response) {
         this.currentClockSpeed.innerHTML = response.processor.clockSpeed;
         this.currentProcCount.innerHTML = response.machine.procCount;
-        this.currentMemory.innerHTML = response.machine.totalRam;
+        this.currentMemory.innerHTML = this.FormatBytes(response.machine.totalRam);
         this.currentMachineBitDepth.innerHTML = response.machine.ramTypeOrOSBitDepth;
         this.currentCPUBitDepth.innerHTML = response.processor.bitDepth;
-        this.currentTotalStorage.innerHTML = response.storage.total;
-        this.currentDiskSwap.innerHTML = response.storage.swapAmount;
-        this.currentDiskCount.innerHTML = response.storage.diskCount;
+        this.currentTotalStorage.innerHTML = this.FormatBytes(response.storage.total);
+        this.currentDiskSwap.innerHTML = this.FormatBytes(response.storage.swapAmount) + " Swap";
+        this.currentDiskCount.innerHTML = response.storage.diskCount + " Disk(s)";
         this.currentCpuName.innerHTML = response.processor.name;
         this.currentOsName.innerHTML = response.machine.operatingSystem;
     },
@@ -312,9 +312,9 @@ window.StatSniper = {
 
         this.chart = new Chart(ctx, Object.assign((this.html.getAttribute("theme") == "light") ? dataLight : dataDark, options));
 
-        processorRectangle.addEventListener("click", function(event) {this.HideDataset(event.target || event.srcElement)});
-        ramRectangle.addEventListener("click", function(event) {this.HideDataset(event.target || event.srcElement)});
-        storageRectangle.addEventListener("click", function(event) {this.HideDataset(event.target || event.srcElement)});
+        processorRectangle.addEventListener("click", function(event) {window.StatSniper.HideDataset(event.target || event.srcElement)});
+        ramRectangle.addEventListener("click", function(event) {window.StatSniper.HideDataset(event.target || event.srcElement)});
+        storageRectangle.addEventListener("click", function(event) {window.StatSniper.HideDataset(event.target || event.srcElement)});
     },
     ChartTick: function (usageData) {
         let datasets = this.chart.data.datasets;
@@ -444,5 +444,16 @@ window.StatSniper = {
     },
     GlobalsInitialization: function () {
         this.html = document.getElementById("html");
+    },
+    FormatBytes: function(bytes, decimals = 2){
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 }

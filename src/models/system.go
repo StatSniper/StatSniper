@@ -9,16 +9,16 @@ type ProcessorInfo struct {
 
 type MachineInfo struct {
 	OperatingSystem     string `json:"operatingSystem"`
-	TotalRam            string `json:"totalRam"`
+	TotalRam            uint64 `json:"totalRam"`
 	RamTypeOrOSBitDepth string `json:"ramTypeOrOSBitDepth"`
 	ProcCount           string `json:"procCount"`
 }
 
 type StorageInfo struct {
 	MainStorage string `json:"mainStorage"`
-	Total       string `json:"total"`
-	DiskCount   string `json:"diskCount"`
-	SwapAmount  string `json:"swapAmount"`
+	Total       uint64 `json:"total"`
+	DiskCount   int    `json:"diskCount"`
+	SwapAmount  uint64 `json:"swapAmount"`
 }
 
 type SystemInfo struct {
