@@ -26,10 +26,10 @@ jobs:
         
       - name: 🛠️ Build and Push Docker Images
         run: |
-          docker build -t dublok/statsniper:main -f ./src/Dockerfile.windows ./src
-          docker push dublok/statsniper:main
-          docker tag dublok/statsniper:main dublok/statsniper:main-${{ steps.get_sha.outputs.sha }}
-          docker push dublok/statsniper:main-${{ steps.get_sha.outputs.sha }}
+          docker build -t dublok/statsniper:windows-main -f ./src/Dockerfile.windows ./src
+          docker push dublok/statsniper:windows-main
+          docker tag dublok/statsniper:windows-main dublok/statsniper:windows-main-${{ steps.get_sha.outputs.sha }}
+          docker push dublok/statsniper:windows-main-${{ steps.get_sha.outputs.sha }}
 
   linux-build-and-push:
     name: 🐧 Linux Docker Build and Push
@@ -61,4 +61,4 @@ jobs:
           file: ./src/Dockerfile.linux
           push: true
           platforms: linux/amd64,linux/arm64,linux/s390x
-          tags: dublok/statsniper:main,dublok/statsniper:main-${{ env.SHA_SHORT }}
+          tags: dublok/statsniper:linux-main,dublok/statsniper:linux-main-${{ env.SHA_SHORT }}
