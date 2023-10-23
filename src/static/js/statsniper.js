@@ -2,9 +2,9 @@
 
 window.StatSniper = {
     currentPage: 1,
-    html: null, background: null, processorLabelsArray: null, storageLabelsArray: null, processorTriangle: null, ramTriangle: null, storageTriangle: null, chart: null,
+    html: null, background: null, processorLabelsArray: null, storageLabelsArray: null, processorTriangle: null, memorySpeed: null, storageTriangle: null, chart: null,
     ramLabelsArray: null, logoPage: null, contactsPage: null, currentClockSpeed: null, currentMemory: null, currentMachineBitDepth: null, currentCPUBitDepth: null, currentDiskSwap: null,
-    currentCpuName: null, currentOsName: null, currentTotalStorage: null, currentCpuCoreCount: null, availableRam: null, currentDiskCount: null, firstControl: null, secondControl: null, cloudLeft: null, cloudRight: null, days: null, hours: null, minutes: null, seconds: null,
+    currentCpuName: null, currentOsName: null, currentTotalStorage: null, currentCpuCoreCount: null, kernel: null, processCount: null, availableRam: null, currentDiskCount: null, firstControl: null, secondControl: null, cloudLeft: null, cloudRight: null, days: null, hours: null, minutes: null, seconds: null,
     _xhr: null,
     XHR: function(){
         if (!this._xhr) this._xhr = new XMLHttpRequest();
@@ -25,15 +25,18 @@ window.StatSniper = {
         this.contactsPage = document.getElementById("contacts-page");
         this.currentClockSpeed = document.getElementById("currentClockSpeed");
         this.currentMemory = document.getElementById("currentMemory");
-        this.currentMachineBitDepth = document.getElementById("currentMachineBitDepth");
+        this.memorySpeed = document.getElementById("memorySpeed");
         this.currentCPUBitDepth = document.getElementById("currentCPUBitDepth");
         this.currentTotalStorage = document.getElementById("currentTotalStorage");
         this.currentDiskSwap = document.getElementById("currentDiskSwap");
+        this.freeClockSpeed = document.getElementById("freeClockSpeed");
+        this.processCount = document.getElementById("processCount");
         this.currentDiskCount = document.getElementById("currentDiskCount");
         this.currentCpuCoreCount = document.getElementById("currentCpuCoreCount");
         this.currentCpuName = document.getElementById("currentCpuName");
         this.availableRam = document.getElementById("availableRam");
         this.currentOsName = document.getElementById("currentOsName");
+        this.kernel = document.getElementById("kernel");
         this.firstControl = document.getElementById("first-control");
         this.secondControl = document.getElementById("second-control");
         this.cloudLeft = document.getElementById("cloud-left");
@@ -84,24 +87,27 @@ window.StatSniper = {
         window.StatSniper.AjaxRequest(window.StatSniper.XHR(), "GET", "/api/all", response => {
             window.StatSniper.LabelsTick(response.usage);
             window.StatSniper.ChartTick(response.usage);
-            window.StatSniper.UpdateInfo(response.systemInfo);
+            window.StatSniper.UpdateInfo(response);
             window.StatSniper.UpdateUptime(response.uptime);
 
             setTimeout(window.StatSniper.SendAllInfoRequest, 1000);
         });
     },
     UpdateInfo: function (response) {
-        this.currentClockSpeed.innerHTML = response.processor.clockSpeed;
-        this.currentMemory.innerHTML = this.FormatBytes(response.machine.totalRam);
-        this.currentMachineBitDepth.innerHTML = response.machine.ramTypeOrOSBitDepth;
-        this.currentCPUBitDepth.innerHTML = response.processor.bitDepth;
-        this.currentTotalStorage.innerHTML = this.FormatBytes(response.storage.total);
-        this.currentCpuCoreCount.innerHTML = response.processor.coreCount + " Cores";
-        this.currentDiskSwap.innerHTML = this.FormatBytes(response.storage.swapAmount) + " Swap";
-        this.availableRam.innerHTML = this.FormatBytes(response.machine.availableRam);
-        this.currentDiskCount.innerHTML = response.storage.diskCount + " Disk(s)";
-        this.currentCpuName.innerHTML = response.processor.name;
-        this.currentOsName.innerHTML = response.machine.operatingSystem;
+        this.currentClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed);        
+        this.freeClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount, 0) + "/" + this.FormatFrequencyMHz((response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount) - (response.usage.processor / 100) * (response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount), 0);
+        this.currentMemory.innerHTML = this.FormatBytes(response.systemInfo.machine.totalRam, 0);
+        this.memorySpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.machine.memorySpeed);
+        this.currentCPUBitDepth.innerHTML = response.systemInfo.processor.bitDepth;
+        this.currentTotalStorage.innerHTML = this.FormatBytes(response.systemInfo.storage.total);
+        this.currentCpuCoreCount.innerHTML = response.systemInfo.processor.coreCount;
+        this.currentDiskSwap.innerHTML = this.FormatBytes(response.systemInfo.storage.swapAmount);
+        this.availableRam.innerHTML = this.FormatBytes(response.systemInfo.machine.availableRam, 0);
+        this.processCount.innerHTML = response.systemInfo.machine.processCount;
+        this.currentDiskCount.innerHTML = response.systemInfo.storage.diskCount;
+        this.currentCpuName.innerHTML = response.systemInfo.processor.name;
+        this.kernel.innerHTML = response.systemInfo.machine.kernel;
+        this.currentOsName.innerHTML = response.systemInfo.machine.operatingSystem;
     },
     UpdateUptime: function (response) {
         this.days.innerHTML = response.days;
@@ -457,5 +463,16 @@ window.StatSniper = {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
 
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    }
+    },
+    FormatFrequencyMHz: function(mhz, decimals = 2) {
+        if (mhz === 0) return '0 MHz';
+    
+        const k = 1000; // For frequency, we typically use powers of 10, not 2.
+        const dm = decimals < 0 ? 0 : decimals;
+        const units = ['MHz', 'GHz', 'THz', 'PHz', 'EHz', 'ZHz', 'YHz'];
+    
+        const i = Math.floor(Math.log(mhz) / Math.log(k));
+    
+        return parseFloat((mhz / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
+    }    
 }
