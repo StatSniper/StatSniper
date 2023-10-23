@@ -20,7 +20,8 @@ RUN go build -o StatSniper main.go
 FROM alpine:latest
 
 # Install ca-certificates to allow your application to make SSL connections
-RUN apk --no-cache add ca-certificates
+# and lshw for getting hardware information
+RUN apk --no-cache add ca-certificates lshw
 
 # Set the working directory to /app
 WORKDIR /app
