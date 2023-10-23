@@ -73,4 +73,3 @@ jobs:
             dublok/statsniper:main
             dublok/statsniper:linux-${{ github.ref_name }}
             dublok/statsniper:linux-${{ github.ref_name }}-${{ env.SHA_SHORT }}
-
