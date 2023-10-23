@@ -10,7 +10,6 @@ type ProcessorInfo struct {
 type MachineInfo struct {
 	OperatingSystem string `json:"operatingSystem"`
 	TotalRam        uint64 `json:"totalRam"`
-	MemorySpeed     int    `json:"memorySpeed"`
 	CoreCount       int    `json:"coreCount"`
 	ProcessCount    int    `json:"processCount"`
 	AvailableRam    uint64 `json:"availableRam"`

@@ -2,7 +2,7 @@
 
 window.StatSniper = {
     currentPage: 1,
-    html: null, background: null, processorLabelsArray: null, storageLabelsArray: null, processorTriangle: null, memorySpeed: null, storageTriangle: null, chart: null,
+    html: null, background: null, processorLabelsArray: null, storageLabelsArray: null, processorTriangle: null, storageTriangle: null, chart: null,
     ramLabelsArray: null, logoPage: null, contactsPage: null, currentClockSpeed: null, currentMemory: null, currentMachineBitDepth: null, currentCPUBitDepth: null, currentDiskSwap: null,
     currentCpuName: null, currentOsName: null, currentTotalStorage: null, currentCpuCoreCount: null, kernel: null, processCount: null, availableRam: null, currentDiskCount: null, firstControl: null, secondControl: null, cloudLeft: null, cloudRight: null, days: null, hours: null, minutes: null, seconds: null,
     _xhr: null,
@@ -25,7 +25,6 @@ window.StatSniper = {
         this.contactsPage = document.getElementById("contacts-page");
         this.currentClockSpeed = document.getElementById("currentClockSpeed");
         this.currentMemory = document.getElementById("currentMemory");
-        this.memorySpeed = document.getElementById("memorySpeed");
         this.currentCPUBitDepth = document.getElementById("currentCPUBitDepth");
         this.currentTotalStorage = document.getElementById("currentTotalStorage");
         this.currentDiskSwap = document.getElementById("currentDiskSwap");
@@ -97,7 +96,6 @@ window.StatSniper = {
         this.currentClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed);        
         this.freeClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount, 0) + "/" + this.FormatFrequencyMHz((response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount) - (response.usage.processor / 100) * (response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount), 0);
         this.currentMemory.innerHTML = this.FormatBytes(response.systemInfo.machine.totalRam, 0);
-        this.memorySpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.machine.memorySpeed);
         this.currentCPUBitDepth.innerHTML = response.systemInfo.processor.bitDepth;
         this.currentTotalStorage.innerHTML = this.FormatBytes(response.systemInfo.storage.total);
         this.currentCpuCoreCount.innerHTML = response.systemInfo.processor.coreCount;

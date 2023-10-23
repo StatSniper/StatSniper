@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   windows-build-and-push:
@@ -24,12 +25,16 @@ jobs:
         id: get_sha
         run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
         
+      - name: 🏷️ Extract Branch Name
+        id: get_branch
+        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+        
       - name: 🛠️ Build and Push Docker Images
         run: |
-          docker build -t dublok/statsniper:windows-main -f ./src/Dockerfile.windows ./src
-          docker push dublok/statsniper:windows-main
-          docker tag dublok/statsniper:windows-main dublok/statsniper:win-main dublok/statsniper:windows-main-${{ steps.get_sha.outputs.sha }}
-          docker push dublok/statsniper:windows-main-${{ steps.get_sha.outputs.sha }}
+          docker build -t dublok/statsniper:windows-${{ steps.get_branch.outputs.branch }} -f ./src/Dockerfile.windows ./src
+          docker push dublok/statsniper:windows-${{ steps.get_branch.outputs.branch }}
+          docker tag dublok/statsniper:windows-${{ steps.get_branch.outputs.branch }} dublok/statsniper:win-${{ steps.get_branch.outputs.branch }} dublok/statsniper:windows-${{ steps.get_branch.outputs.branch }}-${{ steps.get_sha.outputs.sha }}
+          docker push dublok/statsniper:windows-${{ steps.get_branch.outputs.branch }}-${{ steps.get_sha.outputs.sha }}
 
   linux-build-and-push:
     name: 🐧 Linux Docker Build and Push
@@ -54,6 +59,9 @@ jobs:
       - name: 🏷️ Fetch Commit SHA
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      - name: 🏷️ Extract Branch Name
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+
       - name: 🛠️ Build and Push Docker Images
         uses: docker/build-push-action@v5.0.0
         with:
@@ -61,4 +69,8 @@ jobs:
           file: ./src/Dockerfile.linux
           push: true
           platforms: linux/amd64,linux/arm64,linux/s390x
-          tags: dublok/statsniper:main,dublok/statsniper:linux-main,dublok/statsniper:linux-main-${{ env.SHA_SHORT }}
+          tags: |
+            dublok/statsniper:main
+            dublok/statsniper:linux-${{ github.ref_name }}
+            dublok/statsniper:linux-${{ github.ref_name }}-${{ env.SHA_SHORT }}
+

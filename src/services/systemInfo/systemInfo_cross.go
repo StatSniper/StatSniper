@@ -55,12 +55,6 @@ func GetSystemInfo() models.SystemInfo {
 		return models.SystemInfo{}
 	}
 
-	ramSpeed, err := GetRAMSpeed()
-	if err != nil {
-		fmt.Println("Error getting GetRAMSpeed:", err)
-		return models.SystemInfo{}
-	}
-
 	processCount, err := GetProcessCount()
 	if err != nil {
 		fmt.Println("Error getting process count:", err)
@@ -92,7 +86,6 @@ func GetSystemInfo() models.SystemInfo {
 			Kernel:          kernelInfo,
 			TotalRam:        memInfo.Total,
 			AvailableRam:    memInfo.Available,
-			MemorySpeed:     ramSpeed,
 			ProcessCount:    processCount,
 		},
 		Storage: models.StorageInfo{
