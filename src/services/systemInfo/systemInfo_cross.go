@@ -61,18 +61,6 @@ func GetSystemInfo() models.SystemInfo {
 		return models.SystemInfo{}
 	}
 
-	osInfo, err := GetOSInfo()
-	if err != nil {
-		fmt.Println("Error getting OS info:", err)
-		return models.SystemInfo{}
-	}
-
-	kernelInfo, err := GetKernelVersion()
-	if err != nil {
-		fmt.Println("Error GetKernelVersion info:", err)
-		return models.SystemInfo{}
-	}
-
 	// Create and return SystemInfo object
 	return models.SystemInfo{
 		Processor: models.ProcessorInfo{
@@ -82,8 +70,8 @@ func GetSystemInfo() models.SystemInfo {
 			BitDepth:   GetBitDepth(hostInfo.KernelArch),
 		},
 		Machine: models.MachineInfo{
-			OperatingSystem: osInfo,
-			Kernel:          kernelInfo,
+			OperatingSystem: hostInfo.Platform,
+			Kernel:          hostInfo.KernelVersion,
 			TotalRam:        memInfo.Total,
 			AvailableRam:    memInfo.Available,
 			ProcessCount:    processCount,

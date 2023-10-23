@@ -95,12 +95,12 @@ window.StatSniper = {
     UpdateInfo: function (response) {
         this.currentClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed);        
         this.freeClockSpeed.innerHTML = this.FormatFrequencyMHz(response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount, 0) + "/" + this.FormatFrequencyMHz((response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount) - (response.usage.processor / 100) * (response.systemInfo.processor.clockSpeed * response.systemInfo.processor.coreCount), 0);
-        this.currentMemory.innerHTML = this.FormatBytes(response.systemInfo.machine.totalRam, 0);
+        this.currentMemory.innerHTML = this.FormatBytes(response.systemInfo.machine.totalRam, 2);
         this.currentCPUBitDepth.innerHTML = response.systemInfo.processor.bitDepth;
         this.currentTotalStorage.innerHTML = this.FormatBytes(response.systemInfo.storage.total);
         this.currentCpuCoreCount.innerHTML = response.systemInfo.processor.coreCount;
         this.currentDiskSwap.innerHTML = this.FormatBytes(response.systemInfo.storage.swapAmount);
-        this.availableRam.innerHTML = this.FormatBytes(response.systemInfo.machine.availableRam, 0);
+        this.availableRam.innerHTML = this.FormatBytes(response.systemInfo.machine.availableRam, 2);
         this.processCount.innerHTML = response.systemInfo.machine.processCount;
         this.currentDiskCount.innerHTML = response.systemInfo.storage.diskCount;
         this.currentCpuName.innerHTML = response.systemInfo.processor.name;
