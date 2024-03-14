@@ -55,5 +55,6 @@ jobs:
             docker push dublok/statsniper:windows-${{ env.BRANCH_NAME }}
             docker tag dublok/statsniper:windows-${{ env.BRANCH_NAME }} dublok/statsniper:windows-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
             docker push dublok/statsniper:windows-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+          fi
         shell: bash
-
+      
