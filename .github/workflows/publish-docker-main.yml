@@ -34,7 +34,13 @@ jobs:
         run: |
           echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
           echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-        shell: bash        
+        shell: bash
+
+      - name: Debug - Print Environment Variables
+        run: |
+          echo "Branch Name: $BRANCH_NAME"
+          echo "SHA Short: $SHA_SHORT"
+        shell: bash      
 
       - name: 🛠️ Setup QEMU (Linux Only)
         if: matrix.platform == 'linux'
