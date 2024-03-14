@@ -53,10 +53,10 @@ jobs:
       - name: 🛠️ Build and Push Docker Images
         run: |
           if [ "${{ matrix.platform }}" = "linux" ]; then
-            docker build -t dublok/statsniper:${{ env.BRANCH_NAME }} -f ./src/${{ matrix.dockerfile }} ./src
-            docker push dublok/statsniper:${{ env.BRANCH_NAME }}
-            docker tag dublok/statsniper:${{ env.BRANCH_NAME }} dublok/statsniper:${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
-            docker push dublok/statsniper:${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+            docker build -t dublok/statsniper:linux-${{ env.BRANCH_NAME }} -f ./src/${{ matrix.dockerfile }} ./src
+            docker push dublok/statsniper:linux-${{ env.BRANCH_NAME }}
+            docker tag dublok/statsniper:linux-${{ env.BRANCH_NAME }} dublok/statsniper:linux-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+            docker push dublok/statsniper:linux-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
           else
             docker build -t dublok/statsniper:windows-${{ env.BRANCH_NAME }} -f ./src/${{ matrix.dockerfile }} ./src
             docker push dublok/statsniper:windows-${{ env.BRANCH_NAME }}
