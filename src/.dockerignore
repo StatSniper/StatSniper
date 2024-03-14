@@ -1,0 +1,11 @@
+# Exclude IDE config directories
+.idea/
+
+# Test output or other temporary files
+*.out
+*.tmp
+
+# Ignore any secrets or configuration files
+*.env
+*.yml
+*.yaml

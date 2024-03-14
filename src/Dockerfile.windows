@@ -1,0 +1,36 @@
+# Build stage: This stage uses the golang:1.21.1-windowsservercore-ltsc2022 image to compile your Go application on Windows.
+FROM golang:windowsservercore-ltsc2022 AS build
+
+# Set the working directory to C:\\app inside the container
+WORKDIR C:\\app
+
+# Copy the go.mod and go.sum files into the container to download the necessary Go modules
+COPY go.mod go.sum ./
+
+# Download dependencies: This step fetches all dependencies specified in go.mod and go.sum
+RUN go mod download -x
+
+# Copy the source code into the container
+COPY . .
+
+# Compile the Go application to a binary named StatSniper.exe
+RUN go build -o StatSniper.exe main.go
+
+# Final stage: This stage uses the Windows Server Core base image to run your Go application
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
+
+# Set the working directory to C:\\app inside the container
+WORKDIR C:\\app
+
+# Copy the compiled binary from the build stage into the C:\\app directory
+COPY --from=build C:\\app\\StatSniper.exe C:\\app\\
+
+# Copy static files and index.html into appropriate directories in your container
+COPY static\\ C:\\app\\static\\
+COPY index.html C:\\app\\
+
+# Expose port 80 to allow external connections to your application
+EXPOSE 80
+
+# Specify the command to run your application
+CMD ["C:\\app\\StatSniper.exe"]

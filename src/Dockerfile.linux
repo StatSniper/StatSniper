@@ -1,0 +1,43 @@
+# Build stage: This stage uses the golang:1.21-alpine image to compile your Go application
+FROM golang:1.21-alpine AS build
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the go.mod and go.sum files into the container to download the necessary Go modules
+COPY go.mod go.sum ./
+
+# Download dependencies: This step fetches all dependencies specified in go.mod and go.sum
+RUN go mod download
+
+# Copy the source code into the container
+COPY . .
+
+# Compile the Go application to a binary named StatSniper
+RUN go build -o StatSniper main.go
+
+# Final stage: This stage uses a minimal alpine image to run your Go application
+FROM alpine:latest
+
+# Install ca-certificates to allow your application to make SSL connections
+# and lshw for getting hardware information
+RUN apk --no-cache add ca-certificates lshw
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the compiled binary from the build stage into the /app directory
+COPY --from=build /app/StatSniper /app/
+
+# Copy static files and index.html into appropriate directories in your container
+COPY static/ /app/static/
+COPY index.html /app/
+
+# Make the StatSniper binary executable
+RUN chmod +x /app/StatSniper
+
+# Expose port 80 to allow external connections to your application
+EXPOSE 80
+
+# Specify the command to run your application
+CMD ["/app/StatSniper"]

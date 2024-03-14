@@ -1,0 +1,60 @@
+name: 🐳 Docker Images CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build-and-push:
+    name: Docker Build and Push
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            dockerfile: Dockerfile.linux
+            platform: linux
+          - os: windows-latest
+            dockerfile: Dockerfile.windows
+            platform: windows
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🖥️ Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: 🏷️ Setup Environment Variables
+        run: |
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: 🛠️ Setup QEMU (Linux Only)
+        if: matrix.platform == 'linux'
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🛠️ Setup Docker Buildx (Linux Only)
+        if: matrix.platform == 'linux'
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🛠️ Build and Push Docker Images
+        run: |
+          if [ "${{ matrix.platform }}" = "linux" ]; then
+            docker build -t dublok/statsniper:${{ env.BRANCH_NAME }} -f ./src/${{ matrix.dockerfile }} ./src
+            docker push dublok/statsniper:${{ env.BRANCH_NAME }}
+            docker tag dublok/statsniper:${{ env.BRANCH_NAME }} dublok/statsniper:${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+            docker push dublok/statsniper:${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+          else
+            docker build -t dublok/statsniper:windows-${{ env.BRANCH_NAME }} -f ./src/${{ matrix.dockerfile }} ./src
+            docker push dublok/statsniper:windows-${{ env.BRANCH_NAME }}
+            docker tag dublok/statsniper:windows-${{ env.BRANCH_NAME }} dublok/statsniper:windows-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+            docker push dublok/statsniper:windows-${{ env.BRANCH_NAME }}-${{ env.SHA_SHORT }}
+          fi
+        shell: bash
+      
