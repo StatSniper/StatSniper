@@ -1,0 +1,71 @@
+name: 🐳 Docker Images CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  release:
+    types: [published]
+
+jobs:
+  build-and-push:
+    name: Docker Build and Push
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            dockerfile: Dockerfile.linux
+            platform: linux
+          - os: windows-latest
+            dockerfile: Dockerfile.windows
+            platform: windows
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🖥️ Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # 🏷️ Setup Environment Variables for Branch Name or Tag
+      - name: 🏷️ Extract Branch Name or Tag
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: 🛠️ Setup QEMU (Linux Only)
+        if: matrix.platform == 'linux'
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🛠️ Setup Docker Buildx (Linux Only)
+        if: matrix.platform == 'linux'
+        uses: docker/setup-buildx-action@v3
+
+      # 🛠️ Build and Push Docker Images
+      - name: 🛠️ Build and Push Docker Images
+        run: |
+          if [ "${{ matrix.platform }}" = "linux" ]; then
+            docker build -t dublok/statsniper:linux-${{ env.VERSION }} -f ./src/${{ matrix.dockerfile }} ./src
+            docker push dublok/statsniper:linux-${{ env.VERSION }}
+            if [[ "${{ github.event_name }}" == "release" ]]; then
+              docker tag dublok/statsniper:linux-${{ env.VERSION }} dublok/statsniper:linux-latest
+              docker push dublok/statsniper:linux-latest
+            fi
+          else
+            docker build -t dublok/statsniper:windows-${{ env.VERSION }} -f ./src/${{ matrix.dockerfile }} ./src
+            docker push dublok/statsniper:windows-${{ env.VERSION }}
+            if [[ "${{ github.event_name }}" == "release" ]]; then
+              docker tag dublok/statsniper:windows-${{ env.VERSION }} dublok/statsniper:windows-latest
+              docker push dublok/statsniper:windows-latest
+            fi
+          fi
+        shell: bash
