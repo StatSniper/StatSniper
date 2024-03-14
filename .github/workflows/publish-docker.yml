@@ -32,6 +32,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      # 🏷️ Fetch Commit SHA
+      - name: 🏷️ Fetch Commit SHA
+        run: echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        shell: bash
+
       # 🏷️ Setup Environment Variables for Branch Name or Tag
       - name: 🏷️ Extract Branch Name or Tag
         run: |
@@ -53,19 +58,19 @@ jobs:
       # 🛠️ Build and Push Docker Images
       - name: 🛠️ Build and Push Docker Images
         run: |
-          if [ "${{ matrix.platform }}" = "linux" ]; then
-            docker build -t dublok/statsniper:linux-${{ env.VERSION }} -f ./src/${{ matrix.dockerfile }} ./src
-            docker push dublok/statsniper:linux-${{ env.VERSION }}
-            if [[ "${{ github.event_name }}" == "release" ]]; then
-              docker tag dublok/statsniper:linux-${{ env.VERSION }} dublok/statsniper:linux-latest
-              docker push dublok/statsniper:linux-latest
-            fi
-          else
-            docker build -t dublok/statsniper:windows-${{ env.VERSION }} -f ./src/${{ matrix.dockerfile }} ./src
-            docker push dublok/statsniper:windows-${{ env.VERSION }}
-            if [[ "${{ github.event_name }}" == "release" ]]; then
-              docker tag dublok/statsniper:windows-${{ env.VERSION }} dublok/statsniper:windows-latest
-              docker push dublok/statsniper:windows-latest
-            fi
+          # Build the Docker image with the primary tag (branch or tag name).
+          docker build -t dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }} -f ./src/${{ matrix.dockerfile }} ./src
+          
+          # Tag the built image with the commit SHA.
+          docker tag dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }} dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }}-${{ env.SHA }}
+          
+          # Push the primary tag and SHA tag in all cases.
+          docker push dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }}
+          docker push dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }}-${{ env.SHA }}
+          
+          # For releases, also tag as 'latest' and push this tag.
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            docker tag dublok/statsniper:${{ matrix.platform }}-${{ env.VERSION }} dublok/statsniper:${{ matrix.platform }}-latest
+            docker push dublok/statsniper:${{ matrix.platform }}-latest
           fi
         shell: bash
