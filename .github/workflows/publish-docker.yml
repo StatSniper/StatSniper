@@ -35,6 +35,7 @@ jobs:
       # 🏷️ Fetch Commit SHA
       - name: 🏷️ Fetch Commit SHA
         run: echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        shell: bash
 
       # 🏷️ Setup Environment Variables for Branch Name or Tag
       - name: 🏷️ Extract Branch Name or Tag
