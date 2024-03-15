@@ -3,8 +3,8 @@ name: 🐳 Docker Images CI/CD
 on:
   push:
     branches:
-      - main
-      - dev
+      - alpha
+      - beta
   release:
     types: [published]
 
