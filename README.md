@@ -3,7 +3,7 @@
 StatSniper is an open-source project aimed at providing a comprehensive dashboard for monitoring various system utilizations such as memory, CPU, processor type, core count, clock speed, free power, total memory, free memory, processes, storage, and more. This tool is ideal for server owners or individual computer users who wish to keep an eye on their infrastructure's performance by deploying a single Docker container.
 
 
-<div align="center"><img src="https://github.com/StatSniper/StatSniper/raw/main/assets/logo.png" width="400"></div>
+<div align="center"><img src="https://github.com/StatSniper/StatSniper/raw/beta/assets/logo.png" width="400"></div>
 
 
 ## Features
@@ -16,7 +16,7 @@ StatSniper is an open-source project aimed at providing a comprehensive dashboar
 
 ## Screenshots
 
-<div align="center"><img src="https://github.com/StatSniper/StatSniper/raw/main/assets/screenshot1.png" width="400"></div>
+<div align="center"><img src="https://github.com/StatSniper/StatSniper/raw/beta/assets/screenshot1.png" width="400"></div>
 
 ## Production Demos
 
