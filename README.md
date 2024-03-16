@@ -22,7 +22,7 @@ StatSniper is an open-source project aimed at providing a comprehensive dashboar
 
 - [Demo 1 (linux-latest)](https://ss.ulgen.dublok.com/)
 - [Demo 2 (linux-beta)](https://ss.hades.dublok.com/)
-- [Demo 1 (linux-alpha)](https://ss.umay.dublok.com/)
+- [Demo 3 (linux-alpha)](https://ss.umay.dublok.com/)
 
 
 ## Getting Started with StatSniper
