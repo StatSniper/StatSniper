@@ -21,24 +21,63 @@ StatSniper is an open-source project aimed at providing a comprehensive dashboar
 ## Production Demos
 
 - [Demo 1 (linux-latest)](https://ss.ulgen.dublok.com/)
-- [Demo 2 (linux-latest)](https://ss.trinity.dublok.com/)
-- [Demo 3 (linux-latest)](https://ss.hades.dublok.com/)
+- [Demo 2 (linux-beta)](https://ss.hades.dublok.com/)
+- [Demo 3 (linux-alpha)](https://ss.umay.dublok.com/)
 
-## Installation
 
-Ensure you have Docker installed on your system. Then, pull the Docker image from Docker Hub:
+## Getting Started with StatSniper
 
-Linux:
+### Prerequisites
+Before you begin, ensure you have Docker installed on your system. Docker is required to pull and run the StatSniper images. You can download Docker from [https://www.docker.com/get-started](https://www.docker.com/get-started).
 
+### Installation
+StatSniper is available as a Docker container for both Linux and Windows systems. Follow these steps to pull the appropriate Docker image for your platform:
+
+**For Linux:**
 ```bash
 docker pull dublok/statsniper:linux-latest
 ```
 
-Windows:
-
+**For Windows:**
 ```bash
 docker pull dublok/statsniper:windows-latest
 ```
+
+We provide different Docker image channels including Alpha, Beta, and Stable to suit various development and deployment needs. For more details on selecting the right version, see our [Docker Image Release Channels](#docker-image-release-channels) section.
+
+### Running StatSniper
+
+After pulling the Docker image, you can run StatSniper using the following commands:
+
+**On Linux:**
+```bash
+docker run -d -p 80:80 dublok/statsniper:linux-latest
+```
+
+**On Windows:**
+```bash
+docker run -d -p 80:80 dublok/statsniper:windows-latest
+```
+
+These commands will start the StatSniper dashboard and make it accessible through your web browser at `http://localhost`.
+
+### Building from Source
+
+If you prefer to build StatSniper from source:
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/StatSniper/StatSniper.git
+    cd StatSniper
+    ```
+
+2. Build the Docker image:
+    ```bash
+    docker build -t yourtag/statsniper .
+    ```
+
+3. Follow the running instructions above to start the dashboard.
+
 
 ## Docker Image Release Channels
 
@@ -66,44 +105,6 @@ Stable releases are thoroughly tested and recommended for production use. They r
 - Version-specific tags (e.g., `windows-v0.1-beta.1`, `linux-v0.1-beta.1`) allow users to lock in a specific version for maximum consistency and reliability in production environments.
 
 To view all available tags and select the appropriate version for your needs, visit our [Docker Hub page](https://hub.docker.com/r/dublok/statsniper/tags).
-
----
-
-Incorporating this section into your README.md offers a clear and detailed guide for users to understand the purpose and stability level of each Docker image channel, helping them make informed decisions based on their specific requirements.
-
-
-## Usage
-
-To run StatSniper:
-
-On Linux:
-
-```bash
-docker run -d -p 80:80 dublok/statsniper:linux-latest
-```
-
-On Windows:
-
-```bash
-docker run -d -p 80:80 dublok/statsniper:windows-latest
-```
-
-This command will start the StatSniper dashboard and make it accessible via `http://localhost`.
-
-## Building from Source
-
-Clone the repository from GitHub:
-
-```bash
-git clone https://github.com/StatSniper/StatSniper.git
-cd StatSniper
-```
-
-Build the Docker image:
-
-```bash
-docker build -t yourtag/statsniper .
-```
 
 ## Contributing
 
